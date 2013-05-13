@@ -88,6 +88,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 					printError("execvp");
 				return -1;
 			} else {
+				
 				// PARENT
 				printf("Child created with PID: %i\n", child_pid);
 				waitpid(child_pid, NULL, 0);

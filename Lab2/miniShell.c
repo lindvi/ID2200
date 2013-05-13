@@ -27,21 +27,31 @@
 #include <unistd.h> 	// definierar bland annat fork() och STDIN_FILENO
 #include <string.h>		// String functions
 #include <sys/types.h>	// definierar typen pid_t
+#include <sys/wait.h>
 #include <errno.h>		// Errno behöver vi verkligen använda denna?
 
 void printError(char* command) {
 	fprintf (stderr, "%s failed: %s\n", command, strerror(errno));
 }
 
+bool checkIfBG(char *input) {
+	int i;
+	for( i=0; input[i] != '\0'; i++);
+	printf("BG, näst sista: %c\n", input[i-1] );
+	if(input[i-1] == '&')
+		return true;
+	return false;
+}
+
 int main(int argc, char const *argv[], char *envp[]) {
 	/* Temporary variables */
 	//struct stat s;
 	int i;						// Counting
-	int status;					// PID STATUS
+	//int status;					// PID STATUS
 	bool running = true;		// Should we continue running the shell?
 	pid_t child_pid;
 	char path[255];
-	char newPath[255];			
+	//char newPath[255];			
 	//char temp[255];
 	char *input;				// Stores the input from the user
 	char *command;
@@ -89,9 +99,16 @@ int main(int argc, char const *argv[], char *envp[]) {
 				return -1;
 			} else {
 				// PARENT
-				printf("Child created with PID: %i\n", child_pid);
-				waitpid(child_pid, NULL, 0);
-				printf("Child with PID: %i terminated\n", child_pid);
+				if( checkIfBG(input) ) {
+					// BG process
+
+				} else {
+					// FG process!
+					printf("Child created with PID: %i\n", child_pid);
+					waitpid(child_pid, NULL, 0);
+					printf("Child with PID: %i terminated\n", child_pid);
+				}
+				
 			}
 		}
 

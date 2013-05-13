@@ -73,55 +73,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		input = (char *)malloc(inBuffer+1);
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)
 			printf("ERROR ERROR ERROR!\n");
-<<<<<<< HEAD
-		
 
-			command = strtok(input, " \n");
-
-			if(command == NULL)
-				command = "";
-			if(strcmp(command, "exit") == 0) {
-				printf("Exiting..\n");
-				running = false;
-			} else if(strcmp(command, "cd") == 0) {
-				command = strtok(NULL, " \n");
-				if(chdir(command) < 0) {
-					strcpy(path, getenv("HOME"));
-					setenv("PWD", path, 1);
-					if(chdir(path) < 0)	
-						printError("cd");
-				} else {
-					strcpy(path, getcwd(0,0));
-					setenv("PWD", path, 1);
-				}
-			}else {
-				child_pid = fork();
-				if(child_pid == 0) {
-					// CHILD
-					parameters[0] = command;
-					for(i=1; i<6; i++) {
-						temp = strtok(NULL, " \n");
-						parameters[i] = temp;
-						
-					}
-					parameters[i] = (char*)NULL;
-					if(execvp(command, parameters) < 0) 
-						printError("execvp");
-					return -1;
-				} else {
-					
-					// PARENT
-					if( checkIfBG(input) ) {
-						// BG process
-
-					} else {
-						// FG process!
-						printf("Child created with PID: %i\n", child_pid);
-						waitpid(child_pid, NULL, 0);
-						printf("Child with PID: %i terminated\n", child_pid);
-					}
-					
-=======
 		command = strtok(input, " \n");
 		if(command == NULL)
 			command = "";
@@ -168,7 +120,6 @@ int main(int argc, char const *argv[], char *envp[]) {
 					printf("FG Child created with PID: %i\n", child_pid);
 					waitpid(child_pid, NULL, 0);
 					printf("FG Child with PID: %i terminated\n", child_pid);
->>>>>>> 07b8106f883ee9e2bf07ac375c25bd0a0d9cc390
 				}
 			}
 

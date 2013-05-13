@@ -40,7 +40,7 @@ bool checkIfBG(char *input) {
 	int length = sizeof(input);
 	for( i=0; i<length; i++) {
 		if(input[i] == '&') {
-			input[i] = '\0';
+			input[i] = (char)0;
 			return true;
 		}
 	}
@@ -51,7 +51,7 @@ void checkChilds() {
 	int pid;
 	pid = waitpid(-1, NULL, WNOHANG); // WNOHANG, return if no change
 	if(pid > 0)
-		printf("Child %i terminated.\n", pid );
+		printf("BG Child %i terminated.\n", pid );
 }
 
 
@@ -136,7 +136,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 					// FG process!
 					printf("FG Child created with PID: %i\n", child_pid);
 					waitpid(child_pid, NULL, 0);
-					//printf("FG Child with PID: %i terminated\n", child_pid);
+					printf("FG Child with PID: %i terminated\n", child_pid);
 				}
 			}
 		}

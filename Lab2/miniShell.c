@@ -47,6 +47,16 @@ bool checkIfBG(char *input) {
 	return false;
 }
 
+
+void handler(int sig)
+{
+  pid_t pid;
+
+  pid = wait(NULL);
+
+  printf("Child [%d] exited.\n", pid);
+}
+
 int main(int argc, char const *argv[], char *envp[]) {
 	/* Temporary variables */
 	int i;						// Counting
@@ -66,6 +76,9 @@ int main(int argc, char const *argv[], char *envp[]) {
 	// Ignorera CTRL - C 
 	if (signal(SIGINT, SIG_IGN) != SIG_IGN)
 	    signal(SIGINT, SIG_IGN);
+
+	// handler tar hand om childs!
+	signal(SIGCHLD, handler);
 
 
 	while(running) {
@@ -129,9 +142,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 					printf("FG Child with PID: %i terminated\n", child_pid);
 				}
 			}
-
-		
-
+		}
 	}
 	// Free allocated memory
 	free(input);

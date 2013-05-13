@@ -34,7 +34,6 @@ void printError(char* command) {
 	fprintf (stderr, "%s failed: %s\n", command, strerror(errno));
 }
 
-
 bool checkIfBG(char *input) {
 	int i;
 	int length = sizeof(input);
@@ -53,7 +52,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 	bool running = true;		// Should we continue running the shell?
 	bool bg = false;
 	pid_t child_pid;
-	char path[255];		
+	char path[256];		
 	char *input;				// Stores the input from the user
 	char *command;
 	char *parameters[6];

@@ -130,7 +130,6 @@ int main(int argc, char const *argv[], char *envp[]) {
 					printError("execvp");
 				return -1;
 			} else {
-				
 				// PARENT
 				if( bg ) {
 					// BG process

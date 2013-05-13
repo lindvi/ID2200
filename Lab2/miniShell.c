@@ -37,7 +37,11 @@ void printError(char* command) {
 
 bool checkIfBG(char *input) {
 	int i;
+<<<<<<< HEAD
+	for( i=0; input[i] != NULL; i++);
+=======
 	for( i=0; input[i] != '\0'; i++);
+>>>>>>> 441bfe414a5a7126d28b471d2a7059a5e04ee953
 	printf("BG, näst sista: %c\n", input[i-1] );
 	if(input[i-1] == '&')
 		return true;

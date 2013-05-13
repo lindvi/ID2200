@@ -39,8 +39,9 @@ bool checkIfBG(char *input) {
 	int i;
 	int length = sizeof(input);
 	for( i=0; i<length; i++) {
+		printf("index: %i\n", (int)input[i]);
 		if(input[i] == '&') {
-			input[i] = (char)0;
+			input[i] = 32;
 			return true;
 		}
 	}
@@ -83,7 +84,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		printf("%s: ", path);
 		input = (char *)malloc(inBuffer+1);
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)
-			printf("ERROR ERROR ERROR!\n");
+			printf("Read Error from stdin!\n");
 		checkChilds();
 		command = strtok(input, " \n");
 		if(command == NULL)

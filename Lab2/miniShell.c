@@ -90,7 +90,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 				strcpy(path, getcwd(0,0));
 				setenv("PWD", path, 1);
 			}
-		} else if(strcmp(command, "")) {
+		} else if(strcmp(command, "") == 0) {
 		
 		}else {
 			// Normal command!

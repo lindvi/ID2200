@@ -50,7 +50,7 @@ bool checkIfBG(char *input) {
 	return false;
 }
 
-/*  */
+/* Kollar om något barn har returnerat och skriver isf ut information om det */
 void checkChilds() {
 	int pid;			/* Spara pid i denna*/
 	pid = waitpid(-1, NULL, WNOHANG); // WNOHANG, returnerar 0/-1 direkt om inget förändrat

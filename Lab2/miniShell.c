@@ -22,9 +22,9 @@
 	- Frigöra variabler bättre? Hur blir det med charpointers när de får nya värden?
 
 */
+#include <stdlib.h>		/* Malloc, free, setenv */
 #include <stdio.h>		/* printf, getline */
 #include <stdbool.h>	/* bool */
-#include <stdlib.h>		/* Malloc, free */
 #include <unistd.h> 	/* definierar bland annat fork() och STDIN_FILENO */
 #include <string.h>		/* String functions */
 #include <sys/types.h>	/* definierar typen pid_t */
@@ -53,7 +53,7 @@ bool checkIfBG(char *input) {
 /* Kollar om något barn har returnerat och skriver isf ut information om det */
 void checkChilds() {
 	int pid;			/* Spara pid i denna*/
-	pid = waitpid(-1, NULL, WNOHANG); // WNOHANG, returnerar 0/-1 direkt om inget förändrat
+	pid = waitpid(-1, NULL, WNOHANG); /* WNOHANG, returnerar 0/-1 direkt om inget förändrat */
 	if(pid > 0)			/* Har vi fått en PID, då har den terminerats*/
 		printf("BG Child %i terminated.\n", pid ); /* Skriv ut meddelande i konsollen */
 }
@@ -75,7 +75,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 
 	strcpy(path, getenv("PWD")); /* Hämtar environment variabel PWD och sparar i path */
 
-	// Ignorera CTRL - C 
+	/* Ignorera CTRL - C */
 	if (signal(SIGINT, SIG_IGN) != SIG_IGN)
 	    signal(SIGINT, SIG_IGN);
 
@@ -85,7 +85,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		input = (char *)malloc(inBuffer+1);	/* Allokera minne till input */
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)	/* Hämta user input */
 			printf("Read Error from stdin!\n");	/*Läste inga bytes från stdin */
-		checkChilds();		/* Kolla om någon child har stängts av */
+		checkChilds();			/* Kolla om någon child har stängts av */
 		command = strtok(input, " \n");	/* hämta första ordet i input (bryter på space och NEWLINE) */
 		if(command == NULL) 	/* Om användaren bara tryckte enter */
 			command = "";		/* måste man sätta command till en tom sträng, annars segmentation fault */

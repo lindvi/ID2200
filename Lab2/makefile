@@ -1,2 +1,2 @@
 main:
-	clear && gcc -Wall -O -o miniShell miniShell.c
+	clear && gcc -Wall -O -pedantic -ansi -o miniShell miniShell.c

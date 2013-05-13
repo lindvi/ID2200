@@ -91,7 +91,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 				setenv("PWD", path, 1);
 			}
 		} else if(strcmp(command, "") == 0) {
-		
+			// NOTHING TODO, Fixes segmentation fault.
 		}else {
 			// Normal command!
 			bg = checkIfBG(input);
@@ -109,7 +109,6 @@ int main(int argc, char const *argv[], char *envp[]) {
 					printError("execvp");
 				return -1;
 			} else {
-				
 				// PARENT
 				if( bg ) {
 					// BG process

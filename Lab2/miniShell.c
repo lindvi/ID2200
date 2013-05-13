@@ -34,9 +34,14 @@ void printError(char* command) {
 	fprintf (stderr, "%s failed: %s\n", command, strerror(errno));
 }
 
+
 bool checkIfBG(char *input) {
 	int i;
+<<<<<<< HEAD
 	for( i=0; input[i] != NULL; i++);
+=======
+	for( i=0; input[i] != '\0'; i++);
+>>>>>>> 441bfe414a5a7126d28b471d2a7059a5e04ee953
 	printf("BG, näst sista: %c\n", input[i-1] );
 	if(input[i-1] == '&')
 		return true;
@@ -61,6 +66,11 @@ int main(int argc, char const *argv[], char *envp[]) {
 	int inBuffer = 70;			// Bytes to allocate the users input (getline allocates more if needed)
 
 	strcpy(path, getenv("PWD")); // PUTENV Pekar om env variabel till sträng, setenv kopierar sträng
+
+	// Ignorera CTRL - C 
+	if (signal(SIGINT, SIG_IGN) != SIG_IGN)
+	    signal(SIGINT, SIG_IGN);
+
 
 	while(running) {
 		printf("%s: ", path);

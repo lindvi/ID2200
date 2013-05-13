@@ -15,6 +15,7 @@
 	- Användaren inte ger kommandon med fler än 5 argument
 	- Du behöver inte parsa kommandoraden för att kunna hantera |, >, < eller ;
 	- Sökväg till mapp/fil får maximalt vara 255 tecken
+	- Max 10 processer igång samtidigt
 
 
 	TODO:
@@ -46,15 +47,13 @@ bool checkIfBG(char *input) {
 	return false;
 }
 
-
-void handler(int sig)
-{
-  pid_t pid;
-
-  pid = wait(NULL);
-
-  printf("Child [%i] exited.\n", pid);
+void checkChilds() {
+	int pid;
+	pid = waitpid(-1, NULL, WNOHANG); // WNOHANG, return if no change
+	if(pid > 0)
+		printf("Child %i terminated.\n", pid );
 }
+
 
 int main(int argc, char const *argv[], char *envp[]) {
 	/* Temporary variables */
@@ -62,7 +61,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 	bool running = true;		// Should we continue running the shell?
 	bool bg = false;
 	pid_t child_pid;
-	char path[255];		
+	char path[256];		
 	char *input;				// Stores the input from the user
 	char *command;
 	char *parameters[6];
@@ -77,7 +76,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 	    signal(SIGINT, SIG_IGN);
 
 	// handler tar hand om childs!
-	signal(SIGCHLD, handler);
+	//signal(SIGCHLD, handler);
 
 
 	while(running) {
@@ -85,7 +84,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		input = (char *)malloc(inBuffer+1);
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)
 			printf("ERROR ERROR ERROR!\n");
-
+		checkChilds();
 		command = strtok(input, " \n");
 		if(command == NULL)
 			command = "";
@@ -139,7 +138,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 					// FG process!
 					printf("FG Child created with PID: %i\n", child_pid);
 					waitpid(child_pid, NULL, 0);
-					printf("FG Child with PID: %i terminated\n", child_pid);
+					//printf("FG Child with PID: %i terminated\n", child_pid);
 				}
 			}
 		}

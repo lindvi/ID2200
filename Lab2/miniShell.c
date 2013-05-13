@@ -73,6 +73,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		input = (char *)malloc(inBuffer+1);
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)
 			printf("ERROR ERROR ERROR!\n");
+
 		command = strtok(input, " \n");
 		if(command == NULL)
 			command = "";
@@ -91,7 +92,14 @@ int main(int argc, char const *argv[], char *envp[]) {
 				setenv("PWD", path, 1);
 			}
 		} else if(strcmp(command, "") == 0) {
-			// NOTHING TODO, Fixes segmentation fault.
+		 /*
+			 ____   ___    _   _  ___ _____ _   _ ___ _   _  ____ _ 
+			|  _ \ / _ \  | \ | |/ _ \_   _| | | |_ _| \ | |/ ___| |
+			| | | | | | | |  \| | | | || | | |_| || ||  \| | |  _| |
+			| |_| | |_| | | |\  | |_| || | |  _  || || |\  | |_| |_|
+			|____/ \___/  |_| \_|\___/ |_| |_| |_|___|_| \_|\____(_)
+
+		 */
 		}else {
 			// Normal command!
 			bg = checkIfBG(input);
@@ -119,10 +127,8 @@ int main(int argc, char const *argv[], char *envp[]) {
 					waitpid(child_pid, NULL, 0);
 					printf("FG Child with PID: %i terminated\n", child_pid);
 				}
-				
 			}
 		}
-
 	}
 	// Free allocated memory
 	free(input);

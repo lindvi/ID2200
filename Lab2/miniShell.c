@@ -22,14 +22,14 @@
 	- Frigöra variabler bättre? Hur blir det med charpointers när de får nya värden?
 
 */
-#include <stdio.h>		// printf, getline
-#include <stdbool.h>	// bool
-#include <stdlib.h>		// Malloc, free
-#include <unistd.h> 	// definierar bland annat fork() och STDIN_FILENO
-#include <string.h>		// String functions
-#include <sys/types.h>	// definierar typen pid_t
-#include <sys/wait.h>
-#include <errno.h>		// Errno behöver vi verkligen använda denna?
+#include <stdio.h>		/* printf, getline */
+#include <stdbool.h>	/* bool */
+#include <stdlib.h>		/* Malloc, free */
+#include <unistd.h> 	/* definierar bland annat fork() och STDIN_FILENO */
+#include <string.h>		/* String functions */
+#include <sys/types.h>	/* definierar typen pid_t */
+#include <sys/wait.h>	/* behövs för waitpid */
+#include <errno.h>		/* Errno behöver vi verkligen använda denna? */
 
 void printError(char* command) {
 	fprintf (stderr, "%s failed: %s\n", command, strerror(errno));

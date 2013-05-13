@@ -17,7 +17,6 @@
 	- Sökväg till mapp/fil får maximalt vara 255 tecken
 	- Max 10 processer igång samtidigt
 
-
 	TODO:
 	- Frigöra variabler bättre? Hur blir det med charpointers när de får nya värden?
 
@@ -30,6 +29,8 @@
 #include <sys/types.h>	/* definierar typen pid_t */
 #include <sys/wait.h>	/* behövs för waitpid */
 #include <errno.h>		/* Errno behöver vi verkligen använda denna? */
+
+int setenv(const char *var_name, const char *new_value, int change_flag);
 
 /* Skriver ut felmeddelande på stderr. Tolkar errno till sträng. */
 void printError(char* command) {

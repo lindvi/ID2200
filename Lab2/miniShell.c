@@ -37,23 +37,23 @@ void printError(char* command) {
 
 bool checkIfBG(char *input) {
 	int i;
-	for( i=0; input[i] != '\0'; i++);
-	printf("BG, näst sista: %c\n", input[i-1] );
-	if(input[i-1] == '&')
-		return true;
+	int length = sizeof(input);
+	for( i=0; i<length; i++) {
+		if(input[i] == '&') {
+			input[i] = '\0';
+			return true;
+		}
+	}
 	return false;
 }
 
 int main(int argc, char const *argv[], char *envp[]) {
 	/* Temporary variables */
-	//struct stat s;
 	int i;						// Counting
-	//int status;					// PID STATUS
 	bool running = true;		// Should we continue running the shell?
+	bool bg = false;
 	pid_t child_pid;
-	char path[255];
-	//char newPath[255];			
-	//char temp[255];
+	char path[255];		
 	char *input;				// Stores the input from the user
 	char *command;
 	char *parameters[6];
@@ -73,6 +73,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		input = (char *)malloc(inBuffer+1);
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)
 			printf("ERROR ERROR ERROR!\n");
+<<<<<<< HEAD
 		
 
 			command = strtok(input, " \n");
@@ -120,6 +121,54 @@ int main(int argc, char const *argv[], char *envp[]) {
 						printf("Child with PID: %i terminated\n", child_pid);
 					}
 					
+=======
+		command = strtok(input, " \n");
+		if(command == NULL)
+			command = "";
+		if(strcmp(command, "exit") == 0) {
+			printf("Exiting..\n");
+			running = false;
+		} else if(strcmp(command, "cd") == 0) {
+			command = strtok(NULL, " \n");
+			if(chdir(command) < 0) {
+				strcpy(path, getenv("HOME"));
+				setenv("PWD", path, 1);
+				if(chdir(path) < 0)	
+					printError("cd");
+			} else {
+				strcpy(path, getcwd(0,0));
+				setenv("PWD", path, 1);
+			}
+		} else if(strcmp(command, "") == 0) {
+		
+		}else {
+			// Normal command!
+			bg = checkIfBG(input);
+			child_pid = fork();
+			if(child_pid == 0) {
+				// CHILD
+				parameters[0] = command;
+				for(i=1; i<6; i++) {
+					temp = strtok(NULL, " \n");
+					parameters[i] = temp;
+					
+				}
+				parameters[i] = (char*)NULL;
+				if(execvp(command, parameters) < 0) 
+					printError("execvp");
+				return -1;
+			} else {
+				
+				// PARENT
+				if( bg ) {
+					// BG process
+					printf("BG child created with PID: %i\n", child_pid);
+				} else {
+					// FG process!
+					printf("FG Child created with PID: %i\n", child_pid);
+					waitpid(child_pid, NULL, 0);
+					printf("FG Child with PID: %i terminated\n", child_pid);
+>>>>>>> 07b8106f883ee9e2bf07ac375c25bd0a0d9cc390
 				}
 			}
 

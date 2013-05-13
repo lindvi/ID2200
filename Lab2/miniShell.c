@@ -34,7 +34,6 @@ void printError(char* command) {
 	fprintf (stderr, "%s failed: %s\n", command, strerror(errno));
 }
 
-
 bool checkIfBG(char *input) {
 	int i;
 	int length = sizeof(input);
@@ -54,7 +53,7 @@ void handler(int sig)
 
   pid = wait(NULL);
 
-  printf("Child [%d] exited.\n", pid);
+  printf("Child [%i] exited.\n", pid);
 }
 
 int main(int argc, char const *argv[], char *envp[]) {
@@ -106,6 +105,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 			}
 		} else if(strcmp(command, "") == 0) {
 		 /*
+
 			 ____   ___    _   _  ___ _____ _   _ ___ _   _  ____ _ 
 			|  _ \ / _ \  | \ | |/ _ \_   _| | | |_ _| \ | |/ ___| |
 			| | | | | | | |  \| | | | || | | |_| || ||  \| | |  _| |
@@ -115,6 +115,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 		 */
 		}else {
 			// Normal command!
+		
 			bg = checkIfBG(input);
 			child_pid = fork();
 			if(child_pid == 0) {

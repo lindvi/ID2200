@@ -37,27 +37,23 @@ void printError(char* command) {
 
 bool checkIfBG(char *input) {
 	int i;
-<<<<<<< HEAD
-	for( i=0; input[i] != NULL; i++);
-=======
-	for( i=0; input[i] != '\0'; i++);
->>>>>>> 441bfe414a5a7126d28b471d2a7059a5e04ee953
-	printf("BG, näst sista: %c\n", input[i-1] );
-	if(input[i-1] == '&')
-		return true;
+	int length = sizeof(input);
+	for( i=0; i<length; i++) {
+		if(input[i] == '&') {
+			input[i] = '\0';
+			return true;
+		}
+	}
 	return false;
 }
 
 int main(int argc, char const *argv[], char *envp[]) {
 	/* Temporary variables */
-	//struct stat s;
 	int i;						// Counting
-	//int status;					// PID STATUS
 	bool running = true;		// Should we continue running the shell?
+	bool bg = false;
 	pid_t child_pid;
-	char path[255];
-	//char newPath[255];			
-	//char temp[255];
+	char path[255];		
 	char *input;				// Stores the input from the user
 	char *command;
 	char *parameters[6];
@@ -78,7 +74,8 @@ int main(int argc, char const *argv[], char *envp[]) {
 		if((bytesRead = *fgets(input, inBuffer, stdin)) < 0)
 			printf("ERROR ERROR ERROR!\n");
 		command = strtok(input, " \n");
-
+		if(command == NULL)
+			command = "";
 		if(strcmp(command, "exit") == 0) {
 			printf("Exiting..\n");
 			running = false;
@@ -93,7 +90,11 @@ int main(int argc, char const *argv[], char *envp[]) {
 				strcpy(path, getcwd(0,0));
 				setenv("PWD", path, 1);
 			}
-		} else {
+		} else if(strcmp(command, "")) {
+		
+		}else {
+			// Normal command!
+			bg = checkIfBG(input);
 			child_pid = fork();
 			if(child_pid == 0) {
 				// CHILD
@@ -110,14 +111,14 @@ int main(int argc, char const *argv[], char *envp[]) {
 			} else {
 				
 				// PARENT
-				if( checkIfBG(input) ) {
+				if( bg ) {
 					// BG process
-
+					printf("BG child created with PID: %i\n", child_pid);
 				} else {
 					// FG process!
-					printf("Child created with PID: %i\n", child_pid);
+					printf("FG Child created with PID: %i\n", child_pid);
 					waitpid(child_pid, NULL, 0);
-					printf("Child with PID: %i terminated\n", child_pid);
+					printf("FG Child with PID: %i terminated\n", child_pid);
 				}
 				
 			}

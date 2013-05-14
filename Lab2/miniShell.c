@@ -26,12 +26,17 @@
 #include <unistd.h> 	/* definierar bland annat fork() och STDIN_FILENO */
 #include <string.h>		/* String functions */
 #include <sys/types.h>	/* definierar typen pid_t */
+#include <time.h>		/* För gettimeofday() samt structen time_t */
+#include <sys/time.h>
 #include <sys/wait.h>	/* behövs för waitpid */
 #include <errno.h>		/* Errno behöver vi verkligen använda denna? */
 
 /*	Denna rad behövs för att förhindra varningen: implicit declaration of function ‘setenv’
 	Detta då setenv inte är implisit deklarerat i de header filerna vi inkluderar. */
 int setenv(const char *var_name, const char *new_value, int change_flag);
+
+/*int gettimeofday(struct timeval *tv, struct timezone *tz);*/
+
 
 /* Skriver ut felmeddelande på stderr. Tolkar errno till sträng. */
 void printError(char* command) {
@@ -67,6 +72,7 @@ int main(int argc, char const *argv[], char *envp[]) {
 	bool running = true;		/* Ska shellen fortsätta? */
 	bool bg = false;			/* Är det en bakgrundsprocess som skall startas? */
 	pid_t child_pid;			/* Spara PID information */
+	struct timeval start, stop;	/* För att mäta hur lång tid exekveringen tog för FG processer */
 	char path[256];				/* Sökväg som programmet nu befinner sig i (255+NUL)*/
 	char *input;				/* Användarens input sparas i denna */
 	char *command;				/* Tokenizerad input */
@@ -137,9 +143,12 @@ int main(int argc, char const *argv[], char *envp[]) {
 					printf("BG child created with PID: %i\n", child_pid);
 				} else {
 					/* FG PROCESS */
+					gettimeofday(&start, NULL);
 					printf("FG Child created with PID: %i\n", child_pid);
 					waitpid(child_pid, NULL, 0);	/* Vänta på att childen avslutas */
-					printf("FG Child with PID: %i terminated\n", child_pid);
+					printf("FG Child with PID: %i terminated. ", child_pid);
+					gettimeofday(&stop, NULL);
+					printf("Time taken: %ld µs\n", ((stop.tv_sec * 1000000 + stop.tv_usec)- (start.tv_sec * 1000000 + start.tv_usec)));
 				}
 			}
 		}

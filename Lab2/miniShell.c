@@ -15,7 +15,6 @@
 	- Användaren inte ger kommandon med fler än 5 argument
 	- Du behöver inte parsa kommandoraden för att kunna hantera |, >, < eller ;
 	- Sökväg till mapp/fil får maximalt vara 255 tecken
-	- Max 10 processer igång samtidigt
 
 	TODO:
 	- Frigöra variabler bättre? Hur blir det med charpointers när de får nya värden?
@@ -30,6 +29,8 @@
 #include <sys/wait.h>	/* behövs för waitpid */
 #include <errno.h>		/* Errno behöver vi verkligen använda denna? */
 
+/*	Denna rad behövs för att förhindra varningen: implicit declaration of function ‘setenv’
+	Detta då setenv inte är implisit deklarerat i de header filerna vi inkluderar. */
 int setenv(const char *var_name, const char *new_value, int change_flag);
 
 /* Skriver ut felmeddelande på stderr. Tolkar errno till sträng. */
@@ -66,13 +67,13 @@ int main(int argc, char const *argv[], char *envp[]) {
 	bool running = true;		/* Ska shellen fortsätta? */
 	bool bg = false;			/* Är det en bakgrundsprocess som skall startas? */
 	pid_t child_pid;			/* Spara PID information */
-	char path[256];				/* Sökväg som programmet nu befinner sig i*/
+	char path[256];				/* Sökväg som programmet nu befinner sig i (255+NUL)*/
 	char *input;				/* Användarens input sparas i denna */
 	char *command;				/* Tokenizerad input */
 	char *parameters[6];		/* Sammanställning av alla parametrar till execvp */
 	char *temp;					/* Spara temporära strängar */
 	int bytesRead;				/* Hur många bytes var lästa från input */
-	int inBuffer = 70;			/* Hur många bytes som skall allokeras till användarens input (getline allokerar mer om det behövs) */
+	int inBuffer = 71;			/* Hur många bytes som skall allokeras till användarens input (getline allokerar mer om det behövs) */
 
 	strcpy(path, getenv("PWD")); /* Hämtar environment variabel PWD och sparar i path */
 
